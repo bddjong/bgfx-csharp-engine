@@ -73,9 +73,7 @@ public unsafe class Graphics
     private void Render(double deltaTime)
     {
         bgfx.set_view_rect(0, 0, 0, (ushort)_window.Size.X, (ushort)_window.Size.Y);
-        ushort clearFlags = (ushort)(bgfx.ClearFlags.Color | bgfx.ClearFlags.Depth);
-        uint clearColor = 0x803030ff;
-        bgfx.set_view_clear(0, clearFlags, clearColor, 1.0f, 0);
+        bgfx.set_view_clear(0, (ushort)(bgfx.ClearFlags.Color | bgfx.ClearFlags.Depth), 0x803030ff, 1.0f, 0);
         bgfx.touch(0);
         bgfx.frame(false);
     }
