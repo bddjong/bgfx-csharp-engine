@@ -6,6 +6,7 @@ namespace BgfxEngine;
 public unsafe class Graphics
 {
     private IWindow _window;
+    private CAMetalLayer _metalLayer;
     
     public Graphics(IWindow window)
     {
@@ -18,7 +19,13 @@ public unsafe class Graphics
         
         if(_window.Native?.Cocoa != null)
         {
-            windowHandler = MetalNativeUtil.InitMetalLayer(_window.Native.Cocoa.Value);
+            _metalLayer = CAMetalLayer.New();
+            NSWindow nsWindow = new NSWindow(_window.Native.Cocoa.Value);
+            NSView contentView = nsWindow.contentView;
+            contentView.wantsLayer = true;
+            contentView.layer = _metalLayer.NativePtr;
+            
+            windowHandler = _metalLayer.NativePtr;
         }
         
         var platformData = new bgfx.PlatformData()
@@ -34,12 +41,13 @@ public unsafe class Graphics
             resolution = new bgfx.Resolution()
             {
                 width = (ushort)_window.Size.X,
-                height = (ushort)_window.Size.Y
+                height = (ushort)_window.Size.Y,
+                reset = (uint)bgfx.ResetFlags.Vsync,
+                format = bgfx.TextureFormat.BGRA8
             },
             deviceId = 0,
-            debug = 1
+            debug = 1,
         };
-
 
         if (!bgfx.init(&bgfxInit))
         {
@@ -50,15 +58,32 @@ public unsafe class Graphics
             Console.WriteLine("BGFX Initialized successfully");
             _window.Closing += bgfx.shutdown;
             _window.Render += Render;
+            _window.Resize += (_) => { Console.WriteLine("Resized"); };
+            _window.Move += (_) => { ResetWindow(); };
         }
+    }
+
+    private void ResetWindow()
+    {
+        // Relink the metal layer
+        
+        if(_window.Native?.Cocoa != null)
+        {
+            NSWindow nsWindow = new NSWindow(_window.Native.Cocoa.Value);
+            NSView contentView = nsWindow.contentView;
+            contentView.wantsLayer = true;
+            contentView.layer = _metalLayer.NativePtr;
+        }
+        
+        bgfx.reset((ushort)_window.Size.X, (ushort)_window.Size.Y, (uint)bgfx.ResetFlags.Vsync, bgfx.TextureFormat.BGRA8);
     }
 
     private void Render(double deltaTime)
     {
-        ushort clearFlags = (ushort)(bgfx.ClearFlags.Color | bgfx.ClearFlags.Depth);
-        uint clearColor = 0x903030ff;
-        bgfx.set_view_clear(0, clearFlags, clearColor, 1.0f, 0);
         bgfx.set_view_rect(0, 0, 0, (ushort)_window.Size.X, (ushort)_window.Size.Y);
+        ushort clearFlags = (ushort)(bgfx.ClearFlags.Color | bgfx.ClearFlags.Depth);
+        uint clearColor = 0x803030ff;
+        bgfx.set_view_clear(0, clearFlags, clearColor, 1.0f, 0);
         bgfx.touch(0);
         bgfx.frame(false);
     }

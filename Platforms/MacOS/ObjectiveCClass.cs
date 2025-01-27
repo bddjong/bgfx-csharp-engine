@@ -6,7 +6,7 @@ using Silk.NET.Core.Native;
 
 namespace BgfxEngine.Platforms.MacOS;
 
-internal unsafe struct ObjectiveCClass
+internal readonly unsafe struct ObjectiveCClass
 {
     public readonly nint NativePtr;
 
