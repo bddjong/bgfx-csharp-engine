@@ -25,37 +25,37 @@ public unsafe class Graphics
             windowHandler = _metalLayer.NativePtr;
         }
         
-        var platformData = new bgfx.PlatformData()
+        BGFX.PlatformData platformData = new BGFX.PlatformData()
         {
             nwh = (void*)windowHandler,
             ndt = (void*)IntPtr.Zero,
         };
         
-        bgfx.Init bgfxInit = new bgfx.Init
+        BGFX.Init bgfxInit = new BGFX.Init
         {
             platformData = platformData,
-            type = bgfx.RendererType.Metal,
-            resolution = new bgfx.Resolution()
+            type = BGFX.RendererType.Metal,
+            resolution = new BGFX.Resolution()
             {
                 width = (ushort)_window.Size.X,
                 height = (ushort)_window.Size.Y,
-                reset = (uint)bgfx.ResetFlags.Vsync,
-                format = bgfx.TextureFormat.BGRA8
+                reset = (uint)BGFX.ResetFlags.Vsync,
+                format = BGFX.TextureFormat.BGRA8
             },
             deviceId = 0,
             debug = 1,
         };
 
-        if (!bgfx.init(&bgfxInit))
+        if (!BGFX.init(&bgfxInit))
         {
             Console.WriteLine("Failed to initialize bgfx");
         }
         else
         {
             Console.WriteLine("BGFX Initialized successfully");
-            _window.Closing += bgfx.shutdown;
+            _window.Closing += BGFX.shutdown;
             _window.Render += Render;
-            _window.Resize += (_) => { Console.WriteLine("Resized"); };
+            _window.Resize += (_) => { ResetWindow(); };
             _window.Move += (_) => { ResetWindow(); };
         }
     }
@@ -67,14 +67,19 @@ public unsafe class Graphics
             MetalUtil.LinkMetalLayer(_window.Native.Cocoa.Value, _metalLayer.NativePtr);
         }
         
-        bgfx.reset((ushort)_window.Size.X, (ushort)_window.Size.Y, (uint)bgfx.ResetFlags.Vsync, bgfx.TextureFormat.BGRA8);
+        BGFX.reset((ushort)_window.Size.X, (ushort)_window.Size.Y, (uint)BGFX.ResetFlags.Vsync, BGFX.TextureFormat.BGRA8);
     }
 
     private void Render(double deltaTime)
     {
-        bgfx.set_view_rect(0, 0, 0, (ushort)_window.Size.X, (ushort)_window.Size.Y);
-        bgfx.set_view_clear(0, (ushort)(bgfx.ClearFlags.Color | bgfx.ClearFlags.Depth), 0x803030ff, 1.0f, 0);
-        bgfx.touch(0);
-        bgfx.frame(false);
+        BGFX.set_view_rect(0, 0, 0, (ushort)_window.Size.X, (ushort)_window.Size.Y);
+        BGFX.set_view_clear(0, (ushort)(BGFX.ClearFlags.Color | BGFX.ClearFlags.Depth), 0x803030ff, 1.0f, 0);
+        BGFX.touch(0);
+        BGFX.frame(false);
+    }
+
+    private void CreateVertexLayout()
+    {
+        BGFX.VertexLayout vertexLayout;
     }
 }

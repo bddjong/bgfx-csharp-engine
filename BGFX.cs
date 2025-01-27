@@ -13,12 +13,12 @@ using System.Runtime.InteropServices;
 
 namespace BgfxEngine
 {
-    public static partial class bgfx
+    public static partial class BGFX
     {
         const string DllName = "lib/libbgfx-shared-libDebug.dylib";
     }
 
-    public static partial class bgfx
+    public static partial class BGFX
     {
         [Flags]
         public enum StateFlags : ulong
