@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BgfxEngine", "BgfxEngine.csproj", "{8997F52C-C169-412E-991E-1FD443310E9C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8997F52C-C169-412E-991E-1FD443310E9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8997F52C-C169-412E-991E-1FD443310E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8997F52C-C169-412E-991E-1FD443310E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8997F52C-C169-412E-991E-1FD443310E9C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
