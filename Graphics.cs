@@ -20,10 +20,7 @@ public unsafe class Graphics
         if(_window.Native?.Cocoa != null)
         {
             _metalLayer = CAMetalLayer.New();
-            NSWindow nsWindow = new NSWindow(_window.Native.Cocoa.Value);
-            NSView contentView = nsWindow.contentView;
-            contentView.wantsLayer = true;
-            contentView.layer = _metalLayer.NativePtr;
+            MetalUtil.LinkMetalLayer(_window.Native.Cocoa.Value, _metalLayer.NativePtr);
             
             windowHandler = _metalLayer.NativePtr;
         }
@@ -65,14 +62,9 @@ public unsafe class Graphics
 
     private void ResetWindow()
     {
-        // Relink the metal layer
-        
         if(_window.Native?.Cocoa != null)
         {
-            NSWindow nsWindow = new NSWindow(_window.Native.Cocoa.Value);
-            NSView contentView = nsWindow.contentView;
-            contentView.wantsLayer = true;
-            contentView.layer = _metalLayer.NativePtr;
+            MetalUtil.LinkMetalLayer(_window.Native.Cocoa.Value, _metalLayer.NativePtr);
         }
         
         bgfx.reset((ushort)_window.Size.X, (ushort)_window.Size.Y, (uint)bgfx.ResetFlags.Vsync, bgfx.TextureFormat.BGRA8);
